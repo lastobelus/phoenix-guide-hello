@@ -1,20 +1,5 @@
 # Hello
 
-To start your Phoenix server:
+Example app built while reading the [official Phoenix Guide](https://hexdocs.pm/phoenix/directory_structure.html#content)
 
-  * Install dependencies with `mix deps.get`
-  * Create and migrate your database with `mix ecto.setup`
-  * Install Node.js dependencies with `npm install` inside the `assets` directory
-  * Start Phoenix endpoint with `mix phx.server`
-
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
-
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
-
-## Learn more
-
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+[Obsidian Notes](obsidian://open?vault=ObsidianNotes&file=110%20Web%20Development%2FPhoenix-Elixir%2FOfficial%20Guide%2F000%20Index%20--%20Phoenix.md)

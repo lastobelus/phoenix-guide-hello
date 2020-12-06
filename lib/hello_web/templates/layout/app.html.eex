@@ -26,6 +26,12 @@
     </header>
     <main role="main" class="container">
       <!-- this is how we render a template directly -->
+      <%= if @conn.assigns[:current_user] do %>
+        <div class="current-user">
+          <strong>Current User</strong>
+          <%= @conn.assigns.current_user.username %>
+        </div>
+      <% end %>
       <%= render(HelloWeb.PageView, "test.html", message: "Hello from layout!") %>
 
       <p>Locale: <%= @locale %>

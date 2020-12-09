@@ -18,7 +18,9 @@ defmodule Hello.CMS do
 
   """
   def list_pages do
-    Repo.all(Page)
+    Page
+    |> Repo.all()
+    |> Repo.preload(author: [user: :credential])
   end
 
   @doc """
@@ -35,7 +37,11 @@ defmodule Hello.CMS do
       ** (Ecto.NoResultsError)
 
   """
-  def get_page!(id), do: Repo.get!(Page, id)
+  def get_page!(id) do
+    Page
+    |> Repo.get!(id)
+    |> Repo.preload(author: [user: :credential])
+  end
 
   @doc """
   Creates a page.
@@ -114,7 +120,9 @@ defmodule Hello.CMS do
 
   """
   def list_authors do
-    Repo.all(Author)
+    Author
+    |> Repo.all()
+    |> Repo.preload(user: :credential)
   end
 
   @doc """
@@ -131,7 +139,11 @@ defmodule Hello.CMS do
       ** (Ecto.NoResultsError)
 
   """
-  def get_author!(id), do: Repo.get!(Author, id)
+  def get_author!(id) do
+    Author
+    |> Repo.get!(id)
+    |> Repo.preload(user: :credential)
+  end
 
   @doc """
   Creates a author.

@@ -6,7 +6,11 @@ defmodule Hello.CMS.Author do
     field :bio, :string
     field :genre, :string
     field :role, :string
-    field :user_id, :id
+    has_many :pages, Page
+
+    # cross-context dependency, which will be constrained to database joins in non-public
+    # functions.
+    belongs_to :user, Hello.Accounts.User
 
     timestamps()
   end

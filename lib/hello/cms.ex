@@ -6,8 +6,9 @@ defmodule Hello.CMS do
   import Ecto.Query, warn: false
   alias Hello.Repo
 
-  alias Hello.CMS.Page
-
+  alias Hello.CMS.{Page, Author}
+  alias Hello.Accounts
+  # region "Pages"
   @doc """
   Returns the list of pages.
 
@@ -55,10 +56,25 @@ defmodule Hello.CMS do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_page(attrs \\ %{}) do
+  def create_page(%Author{} = author, attrs \\ %{}) do
     %Page{}
     |> Page.changeset(attrs)
+    |> Ecto.Changeset.put_change(:author_id, author.id)
     |> Repo.insert()
+  end
+
+  def ensure_author_exists(%Accounts.User{} = user) do
+    %Author{user_id: user.id}
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.unique_constraint(:user_id)
+    |> Repo.insert()
+    |> handle_existing_author()
+  end
+
+  defp handle_existing_author({:ok, author}), do: author
+
+  defp handle_existing_author({:error, changeset}) do
+    Repo.get_by!(Author, user_id: changeset.data.user_id)
   end
 
   @doc """
@@ -108,8 +124,9 @@ defmodule Hello.CMS do
     Page.changeset(page, attrs)
   end
 
-  alias Hello.CMS.Author
+  # endregion "Pages"
 
+  # region "Authors"
   @doc """
   Returns the list of authors.
 
@@ -140,6 +157,7 @@ defmodule Hello.CMS do
 
   """
   def get_author!(id) do
+    # regular comment
     Author
     |> Repo.get!(id)
     |> Repo.preload(user: :credential)
@@ -176,6 +194,7 @@ defmodule Hello.CMS do
 
   """
   def update_author(%Author{} = author, attrs) do
+    # regular comment
     author
     |> Author.changeset(attrs)
     |> Repo.update()
@@ -209,4 +228,6 @@ defmodule Hello.CMS do
   def change_author(%Author{} = author, attrs \\ %{}) do
     Author.changeset(author, attrs)
   end
+
+  # endregion "Authors"
 end

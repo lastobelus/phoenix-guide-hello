@@ -8,6 +8,11 @@
   </li>
 
   <li>
+    <strong>Author:</strong>
+    <%= author_name(@page) %>
+  </li>
+
+  <li>
     <strong>Body:</strong>
     <%= @page.body %>
   </li>

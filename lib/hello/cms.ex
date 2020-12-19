@@ -124,6 +124,26 @@ defmodule Hello.CMS do
     Page.changeset(page, attrs)
   end
 
+  @doc """
+    Increments the views counter on a page, in a concurrency safe way
+
+    ## Examples
+
+        iex> inc_page_views(page)
+        %Page{views: page.views + 1}
+  """
+  def inc_page_views(%Page{} = page) do
+    # update_all returns a tuple with the count of updated records, and an
+    # list of the selected values in the query.
+    # The query we pass it just selects the views column of the page by page.id.
+    # The `inc: [views: 1]` does an atomic DB increment using `UPDATE...RETURNING`
+    {1, [%Page{views: views}]} =
+      from(p in Page, where: p.id == ^page.id, select: [:views])
+      |> Repo.update_all(inc: [views: 1])
+
+    put_in(page.views, views)
+  end
+
   # endregion "Pages"
 
   # region "Authors"

@@ -14,9 +14,10 @@ defmodule Hello.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Hello.PubSub},
       # Start the Endpoint (http/https)
-      HelloWeb.Endpoint
+      HelloWeb.Endpoint,
       # Start a worker by calling: Hello.Worker.start_link(arg)
       # {Hello.Worker, arg}
+      {Hello.ExampleServer, fn -> "Hello, world!" end}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -5,6 +5,14 @@
 
 <section class="row">
   <article class="column">
+    <div id="messages" role="log" aria-live="polite">
+
+    </div>
+    <input type="text" id="chat-input">
+  </article>
+</section>
+<section class="row">
+  <article class="column">
     <h2>Resources</h2>
     <ul>
       <li>

@@ -4,6 +4,8 @@ defmodule HelloWeb.Router do
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
+    plug :put_current_user
+    plug :put_user_token
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
@@ -63,8 +65,37 @@ defmodule HelloWeb.Router do
         |> Phoenix.Controller.redirect(to: "/")
         |> halt()
 
+      _user_id ->
+        conn
+    end
+  end
+
+  defp put_current_user(conn, _) do
+    IO.puts("put_current_user")
+
+    case get_session(conn, :user_id) do
+      nil ->
+        IO.puts("...do nothing")
+        conn
+
       user_id ->
+        IO.puts("...lookup user #{user_id}")
         assign(conn, :current_user, Hello.Accounts.get_user!(user_id))
+    end
+  end
+
+  defp put_user_token(conn, _) do
+    IO.puts("put_current_user")
+
+    if current_user = conn.assigns[:current_user] do
+      IO.puts("...create token")
+      token = Phoenix.Token.sign(conn, "user socket", current_user.id)
+      conn = assign(conn, :user_token, token)
+      IO.puts("...#{conn.assigns[:user_token]}")
+      conn
+    else
+      IO.puts("...do nothing")
+      conn
     end
   end
 end

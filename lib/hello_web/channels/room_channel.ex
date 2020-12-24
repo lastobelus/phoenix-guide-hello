@@ -1,9 +1,12 @@
 defmodule HelloWeb.RoomChannel do
   use Phoenix.Channel
+  alias HelloWeb.Presence
+
   @moduledoc false
 
   @impl true
   def join("room:lobby", _message, socket) do
+    send(self(), :after_join)
     {:ok, socket}
   end
 
@@ -21,6 +24,17 @@ defmodule HelloWeb.RoomChannel do
   @impl true
   def handle_in("new_msg", %{"body" => body}, socket) do
     broadcast!(socket, "new_msg", %{body: body})
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_info(:after_join, socket) do
+    {:ok, _} =
+      Presence.track(socket, socket.assigns.current_user.username, %{
+        online_at: inspect(System.system_time(:second))
+      })
+
+    push(socket, "presence_state", Presence.list(socket))
     {:noreply, socket}
   end
 end

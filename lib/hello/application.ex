@@ -17,7 +17,8 @@ defmodule Hello.Application do
       HelloWeb.Endpoint,
       # Start a worker by calling: Hello.Worker.start_link(arg)
       # {Hello.Worker, arg}
-      {Hello.ExampleServer, fn -> "Hello, world!" end}
+      {Hello.ExampleServer, fn -> "Hello, world!" end},
+      HelloWeb.Presence
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

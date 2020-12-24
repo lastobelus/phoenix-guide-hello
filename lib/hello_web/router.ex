@@ -28,6 +28,8 @@ defmodule HelloWeb.Router do
     resources "/sessions", SessionController,
       only: [:new, :create, :delete],
       singleton: true
+
+    resources "/posts", PostController
   end
 
   scope "/cms", HelloWeb.CMS, as: :cms do

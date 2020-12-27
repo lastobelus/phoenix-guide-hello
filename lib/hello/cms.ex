@@ -57,10 +57,20 @@ defmodule Hello.CMS do
 
   """
   def create_page(%Author{} = author, attrs \\ %{}) do
-    %Page{}
-    |> Page.changeset(attrs)
-    |> Ecto.Changeset.put_change(:author_id, author.id)
-    |> Repo.insert()
+    result =
+      %Page{}
+      |> Page.changeset(attrs)
+      |> Ecto.Changeset.put_change(:author_id, author.id)
+      |> Repo.insert()
+
+    case result do
+      {:ok, page} ->
+        page = Repo.preload(page, author: [user: :credential])
+        {:ok, page}
+
+      _ ->
+        result
+    end
   end
 
   def ensure_author_exists(%Accounts.User{} = user) do

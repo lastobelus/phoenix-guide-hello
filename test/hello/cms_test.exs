@@ -2,19 +2,19 @@ defmodule Hello.CMSTest do
   use Hello.DataCase
 
   alias Hello.CMS
+  alias Support.CMS.Fixtures
 
   describe "pages" do
     alias Hello.CMS.Page
 
-    @valid_attrs %{body: "some body", title: "some title", views: 42}
-    @update_attrs %{body: "some updated body", title: "some updated title", views: 43}
+    @valid_attrs %{body: "some body", title: "some title"}
+    @update_attrs %{body: "some updated body", title: "some updated title"}
     @invalid_attrs %{body: nil, title: nil, views: nil}
 
     def page_fixture(attrs \\ %{}) do
-      {:ok, page} =
-        attrs
-        |> Enum.into(@valid_attrs)
-        |> CMS.create_page()
+      attrs = Enum.into(attrs, @valid_attrs)
+
+      {:ok, page} = CMS.create_page(Fixtures.user_author_fixture(), attrs)
 
       page
     end
@@ -30,14 +30,15 @@ defmodule Hello.CMSTest do
     end
 
     test "create_page/1 with valid data creates a page" do
-      assert {:ok, %Page{} = page} = CMS.create_page(@valid_attrs)
+      author = Fixtures.user_author_fixture()
+      assert {:ok, %Page{} = page} = CMS.create_page(author, @valid_attrs)
       assert page.body == "some body"
       assert page.title == "some title"
-      assert page.views == 42
     end
 
     test "create_page/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = CMS.create_page(@invalid_attrs)
+      author = Fixtures.user_author_fixture()
+      assert {:error, %Ecto.Changeset{}} = CMS.create_page(author, @invalid_attrs)
     end
 
     test "update_page/2 with valid data updates the page" do
@@ -45,7 +46,6 @@ defmodule Hello.CMSTest do
       assert {:ok, %Page{} = page} = CMS.update_page(page, @update_attrs)
       assert page.body == "some updated body"
       assert page.title == "some updated title"
-      assert page.views == 43
     end
 
     test "update_page/2 with invalid data returns error changeset" do
@@ -70,7 +70,11 @@ defmodule Hello.CMSTest do
     alias Hello.CMS.Author
 
     @valid_attrs %{bio: "some bio", genre: "some genre", role: "some role"}
-    @update_attrs %{bio: "some updated bio", genre: "some updated genre", role: "some updated role"}
+    @update_attrs %{
+      bio: "some updated bio",
+      genre: "some updated genre",
+      role: "some updated role"
+    }
     @invalid_attrs %{bio: nil, genre: nil, role: nil}
 
     def author_fixture(attrs \\ %{}) do
@@ -79,7 +83,7 @@ defmodule Hello.CMSTest do
         |> Enum.into(@valid_attrs)
         |> CMS.create_author()
 
-      author
+      author |> Repo.preload(user: :credential)
     end
 
     test "list_authors/0 returns all authors" do

@@ -7,12 +7,16 @@ defmodule Hello.CMS.Page do
   schema "pages" do
     field :body, :string
     field :title, :string
-    field :views, :integer
+    field :views, :integer, default: 0
     belongs_to :author, Author
 
     timestamps()
   end
 
+  @spec changeset(
+          {map, map} | %{:__struct__ => atom | %{__changeset__: map}, optional(atom) => any},
+          :invalid | %{optional(:__struct__) => none, optional(atom | binary) => any}
+        ) :: Ecto.Changeset.t()
   @doc false
   def changeset(page, attrs) do
     page

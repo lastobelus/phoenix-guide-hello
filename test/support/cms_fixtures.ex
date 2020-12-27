@@ -13,8 +13,13 @@ defmodule Support.CMS.Fixtures do
     user
   end
 
-  def user_author_fixture(user_attrs \\ %{}) do
-    user = user_fixture(user_attrs)
+  def user_author_fixture(user \\ nil, user_attrs \\ %{}) do
+    user =
+      case user do
+        nil -> user_fixture(user_attrs)
+        _ -> user
+      end
+
     CMS.ensure_author_exists(user)
   end
 end

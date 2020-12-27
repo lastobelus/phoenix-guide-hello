@@ -2,14 +2,20 @@ defmodule HelloWeb.CMS.PageControllerTest do
   use HelloWeb.ConnCase
 
   alias Hello.CMS
+  alias Support.CMS.Fixtures
 
   @create_attrs %{body: "some body", title: "some title", views: 42}
   @update_attrs %{body: "some updated body", title: "some updated title", views: 43}
   @invalid_attrs %{body: nil, title: nil, views: nil}
 
-  def fixture(:page) do
-    {:ok, page} = CMS.create_page(@create_attrs)
+  def fixture(:page, author) do
+    {:ok, page} = CMS.create_page(author, @create_attrs)
     page
+  end
+
+  setup %{conn: conn} do
+    user = Fixtures.user_fixture()
+    [conn: Plug.Test.init_test_session(conn, user_id: user.id), authenticated_user: user]
   end
 
   describe "index" do
@@ -75,14 +81,16 @@ defmodule HelloWeb.CMS.PageControllerTest do
     test "deletes chosen page", %{conn: conn, page: page} do
       conn = delete(conn, Routes.cms_page_path(conn, :delete, page))
       assert redirected_to(conn) == Routes.cms_page_path(conn, :index)
+
       assert_error_sent 404, fn ->
         get(conn, Routes.cms_page_path(conn, :show, page))
       end
     end
   end
 
-  defp create_page(_) do
-    page = fixture(:page)
+  defp create_page(context) do
+    author = Fixtures.user_author_fixture(context[:authenticated_user])
+    page = fixture(:page, author)
     %{page: page}
   end
 end

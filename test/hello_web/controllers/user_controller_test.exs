@@ -3,7 +3,11 @@ defmodule HelloWeb.UserControllerTest do
 
   alias Hello.Accounts
 
-  @create_attrs %{name: "some name", username: "some username"}
+  @create_attrs %{
+    name: "some name",
+    username: "some username",
+    credential: %{email: "some_email@test.com"}
+  }
   @update_attrs %{name: "some updated name", username: "some updated username"}
   @invalid_attrs %{name: nil, username: nil}
 
@@ -75,6 +79,7 @@ defmodule HelloWeb.UserControllerTest do
     test "deletes chosen user", %{conn: conn, user: user} do
       conn = delete(conn, Routes.user_path(conn, :delete, user))
       assert redirected_to(conn) == Routes.user_path(conn, :index)
+
       assert_error_sent 404, fn ->
         get(conn, Routes.user_path(conn, :show, user))
       end

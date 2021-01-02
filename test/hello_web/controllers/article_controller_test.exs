@@ -38,7 +38,7 @@ defmodule HelloWeb.ArticleControllerTest do
       conn = get(conn, Routes.article_path(conn, :show, id))
 
       assert %{
-               "id" => id,
+               "id" => ^id,
                "body" => "some body",
                "title" => "some title"
              } = json_response(conn, 200)["data"]
@@ -60,7 +60,7 @@ defmodule HelloWeb.ArticleControllerTest do
       conn = get(conn, Routes.article_path(conn, :show, id))
 
       assert %{
-               "id" => id,
+               "id" => ^id,
                "body" => "some updated body",
                "title" => "some updated title"
              } = json_response(conn, 200)["data"]

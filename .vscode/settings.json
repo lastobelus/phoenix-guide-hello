@@ -2,5 +2,6 @@
   "cSpell.words": [
     "preload"
   ],
-  "window.zoomLevel": -1
+  "window.zoomLevel": -0.75,
+  "editor.fontSize": 15
 }
